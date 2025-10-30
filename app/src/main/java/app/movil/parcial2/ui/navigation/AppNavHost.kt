@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.movil.parcial2.ui.screens.*
+import app.movil.parcial2.ui.screens.about.about
+import app.movil.parcial2.ui.screens.admin.PantallaAdmin
 import app.movil.parcial2.ui.screens.cart.CartScreen
 import app.movil.parcial2.ui.screens.home.HomeScreen
 import app.movil.parcial2.ui.screens.login.LoginScreen
@@ -17,8 +19,8 @@ fun AppNavHost(nav: NavHostController) {
         composable(Rutas.HOME) { HomeScreen(nav) }
         composable(Rutas.CATALOG) { CatalogScreen(nav) }
         composable(Rutas.CART) { CartScreen(nav) }
-        composable(Rutas.ABOUT) { AboutScreen(nav) }
-        composable(Rutas.ADMIN) { AdminScreen(nav) }
+        composable(Rutas.ABOUT) { about(nav) }
+        composable(Rutas.ADMIN) { PantallaAdmin(nav) }
         composable(Rutas.DETAIL) { backStack ->
             val id = backStack.arguments?.getString("id")?.toLongOrNull() ?: 0L
             DetailScreen(nav, id)
