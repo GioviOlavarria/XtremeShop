@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    // Usa el ID completo para KAPT (evita el “Unresolved reference kapt”):
+
     id("org.jetbrains.kotlin.kapt")
 }
 
@@ -29,7 +29,7 @@ android {
         }
     }
 
-    // Si tu JDK es 17 puedes subir a 17 sin problema
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -38,7 +38,7 @@ android {
 
     buildFeatures { compose = true }
 
-    // Con Kotlin 2.x + plugin compose, no necesitas fijar K2 extension version
+    // Con Kotlin 2.x + plugin compose,
     // composeOptions { kotlinCompilerExtensionVersion = "..." }
 
     packaging {
@@ -67,9 +67,11 @@ dependencies {
     // Room (SQLite)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.material3)
+    implementation(libs.androidx.runtime)
     kapt(libs.androidx.room.compiler)
-
-    // DataStore (opcional)
+    implementation(libs.androidx.compose.foundation)
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
 
     // Test

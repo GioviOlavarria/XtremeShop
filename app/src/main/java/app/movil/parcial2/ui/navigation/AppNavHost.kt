@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import app.movil.parcial2.ui.screens.*
+import app.movil.parcial2.ui.screens.cart.CartScreen
+import app.movil.parcial2.ui.screens.home.HomeScreen
+import app.movil.parcial2.ui.screens.login.LoginScreen
 
 @Composable
 fun AppNavHost(nav: NavHostController) {
@@ -21,4 +24,9 @@ fun AppNavHost(nav: NavHostController) {
             DetailScreen(nav, id)
         }
     }
+}
+
+@Composable
+fun CatalogScreen(x0: NavHostController) {
+    TODO("Not yet implemented")
 }
