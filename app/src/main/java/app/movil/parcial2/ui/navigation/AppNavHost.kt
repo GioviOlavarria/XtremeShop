@@ -11,6 +11,7 @@ import app.movil.parcial2.ui.screens.admin.PantallaAdmin
 import app.movil.parcial2.ui.screens.cart.CartScreen
 import app.movil.parcial2.ui.screens.home.HomeScreen
 import app.movil.parcial2.ui.screens.login.LoginScreen
+import app.movil.parcial2.ui.screens.detail.DetailScreen
 
 @Composable
 fun AppNavHost(nav: NavHostController) {
