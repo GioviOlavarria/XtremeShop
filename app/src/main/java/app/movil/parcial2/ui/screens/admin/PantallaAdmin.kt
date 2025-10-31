@@ -39,7 +39,7 @@ import app.movil.parcial2.domain.model.Category
 import app.movil.parcial2.domain.model.Producto
 import app.movil.parcial2.domain.model.Role
 import app.movil.parcial2.util.sesion
-// =====================================================
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -124,7 +124,7 @@ fun PantallaAdmin(nav: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Selector de categoría (sin APIs experimentales)
+
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = categoria.name,
@@ -160,7 +160,7 @@ fun PantallaAdmin(nav: NavHostController) {
                 Button(onClick = {
                     scope.launch {
                         try {
-                            // Validación rápida en UI
+
                             val pid = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido")
                             val pprice = precio.toDoubleOrNull() ?: throw IllegalArgumentException("Precio inválido")
                             if (nombre.isBlank() || descripcion.isBlank()) throw IllegalArgumentException("Campos vacíos")

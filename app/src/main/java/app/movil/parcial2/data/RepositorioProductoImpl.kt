@@ -22,7 +22,7 @@ class RepositorioProductoImpl(private val dao: ProductoDao): RepositorioProducto
     override suspend fun get(id: Long) = dao.getById(id)?.toDomain()
 
     override suspend fun create(product: Producto) {
-        // Validaciones de rúbrica: ID único, no vacíos, precio > 0, categoría válida
+
         require(product.id > 0){"ID inválido"}
         require(product.name.isNotBlank()){"Nombre obligatorio"}
         require(product.description.isNotBlank()){"Descripción obligatoria"}

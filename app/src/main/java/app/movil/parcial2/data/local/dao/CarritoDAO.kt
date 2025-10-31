@@ -1,12 +1,15 @@
 package app.movil.parcial2.data.local.dao
 
-
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CarritoDAO {
+
     @Query("SELECT * FROM items_carrito ORDER BY rowId")
     fun observeCart(): Flow<List<EntidadItemCarrito>>
 

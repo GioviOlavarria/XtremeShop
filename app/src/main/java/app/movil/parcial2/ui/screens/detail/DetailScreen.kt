@@ -37,6 +37,7 @@ import app.movil.parcial2.data.local.entidades.EntidadProducto
 import app.movil.parcial2.data.RepositorioProductoImpl
 import app.movil.parcial2.data.RepositorioCarritoImpl
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(nav: NavHostController, productId: Long) {
     val ctx = LocalContext.current

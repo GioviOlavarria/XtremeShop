@@ -16,7 +16,7 @@ interface ProductoDao {
     @Query("SELECT * FROM productos WHERE id = :id")
     suspend fun getById(id: Long): EntidadProducto?
 
-    @Insert(onConflict = OnConflictStrategy.ABORT) // ID único (validación)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(producto: EntidadProducto)
 
     @Update

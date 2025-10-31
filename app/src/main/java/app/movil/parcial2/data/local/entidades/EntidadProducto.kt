@@ -9,5 +9,5 @@ data class EntidadProducto(
     val name: String,
     val price: Double,
     val description: String,
-    val category: String // "SKATE" | "ROLLER" | "BMX"
+    val category: String
 )

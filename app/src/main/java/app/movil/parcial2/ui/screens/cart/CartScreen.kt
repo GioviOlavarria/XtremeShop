@@ -23,12 +23,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 
-
-import androidx.compose.ui.platform.LocalContext
 import app.movil.parcial2.data.local.BaseDeDatos
 import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 
@@ -38,7 +37,8 @@ fun CartScreen(
     nav: NavHostController
 ) {
     val ctx = LocalContext.current
-    val db = remember { BaseDeDatos  .get(ctx) }
+
+    val db = remember { BaseDeDatos.get(ctx.applicationContext) }
     val cartDao = remember { db.carritoDao() }
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
@@ -46,9 +46,7 @@ fun CartScreen(
 
     val items by cartDao.observeCart().collectAsState(initial = emptyList())
 
-    val total = remember(items) {
-        items.sumOf { it.unitPrice * it.quantity }
-    }
+    val total = remember(items) { items.sumOf { it.unitPrice * it.quantity } }
 
     Scaffold(
         topBar = {
@@ -83,17 +81,12 @@ fun CartScreen(
                         CartRow(
                             item = it,
                             onInc = {
-                                scope.launch {
-                                    cartDao.updateQuantity(it.rowId, it.quantity + 1)
-                                }
+                                scope.launch { cartDao.updateQuantity(it.rowId, it.quantity + 1) }
                             },
                             onDec = {
                                 scope.launch {
-                                    if (it.quantity > 1) {
-                                        cartDao.updateQuantity(it.rowId, it.quantity - 1)
-                                    } else {
-                                        cartDao.deleteById(it.rowId)
-                                    }
+                                    if (it.quantity > 1) cartDao.updateQuantity(it.rowId, it.quantity - 1)
+                                    else cartDao.deleteById(it.rowId)
                                 }
                             },
                             onDelete = {
@@ -106,7 +99,6 @@ fun CartScreen(
                         Divider()
                     }
                 }
-
 
                 Column(
                     modifier = Modifier
@@ -121,7 +113,6 @@ fun CartScreen(
                     Button(
                         onClick = {
                             scope.launch {
-
                                 cartDao.clear()
                                 snackbar.showSnackbar("¡Compra realizada con éxito!")
                             }
@@ -146,7 +137,10 @@ private fun CartRow(
     ListItem(
         headlineContent = { Text(item.name) },
         supportingContent = {
-            Text("x${item.quantity} • $${"%.2f".format(item.unitPrice)} = $${"%.2f".format(item.unitPrice * item.quantity)}")
+            Text(
+                "x${item.quantity} • $${"%.2f".format(item.unitPrice)} = " +
+                        "$${"%.2f".format(item.unitPrice * item.quantity)}"
+            )
         },
         trailingContent = {
             Row(verticalAlignment = Alignment.CenterVertically) {
