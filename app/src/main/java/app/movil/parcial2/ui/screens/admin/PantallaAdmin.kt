@@ -64,10 +64,10 @@ fun PantallaAdmin(nav: NavHostController) {
     var nombre by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
-    var categoria by remember { mutableStateOf(Category.SKATE) }
+    var categoria by remember { mutableStateOf("SKATE") }
 
     fun limpiar() {
-        id = ""; nombre = ""; precio = ""; descripcion = ""; categoria = Category.SKATE
+        id = ""; nombre = ""; precio = ""; descripcion = ""; categoria = categoria
     }
 
 
@@ -127,7 +127,7 @@ fun PantallaAdmin(nav: NavHostController) {
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
-                    value = categoria.name,
+                    value = categoria,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Categoría") },
@@ -144,7 +144,7 @@ fun PantallaAdmin(nav: NavHostController) {
                         DropdownMenuItem(
                             text = { Text(cat.name) },
                             onClick = {
-                                categoria = cat
+                                categoria = cat.name
                                 catExpanded = false
                             }
                         )

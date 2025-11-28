@@ -36,6 +36,9 @@ import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 import app.movil.parcial2.data.local.entidades.EntidadProducto
 import app.movil.parcial2.data.RepositorioProductoImpl
 import app.movil.parcial2.data.RepositorioCarritoImpl
+import app.movil.parcial2.domain.model.Producto
+import app.movil.parcial2.network.ApiService
+import app.movil.parcial2.network.RetrofitClient
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,9 +51,27 @@ fun DetailScreen(nav: NavHostController, productId: Long) {
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
 
-    LaunchedEffect(productId) { product = productDao.getById(productId)?.let {
-        EntidadProducto(it.id, it.name, it.price, it.description, it.category)
-    } }
+    val api = remember {
+        RetrofitClient.instance.create(ApiService::class.java)
+    }
+
+    LaunchedEffect(productId) {
+        scope.launch {
+            try {
+                val fetchedProduct = api.getProductById(productId)
+                product = EntidadProducto(
+                    id = fetchedProduct.id,
+                    name = fetchedProduct.name,
+                    price = fetchedProduct.price,
+                    description = fetchedProduct.description,
+                    category = fetchedProduct.category
+                )
+            } catch (e: Exception) {
+                // Handle error
+                snackbar.showSnackbar("Error fetching product details " + e.message)
+            }
+        }
+    }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(product?.name ?: "Detalle") }) },

@@ -7,5 +7,5 @@ data class Producto(
     val name: String,
     val price: Double,
     val description: String,
-    val category: Category
+    val category: String
 )

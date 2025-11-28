@@ -18,6 +18,8 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,30 +43,40 @@ fun CatalogScreen(nav: NavHostController) {
         RetrofitClient.instance.create(ApiService::class.java)
     }
 
+    // --- START: Corrected Logic ---
+
     val tabs = listOf("Skate" to "SKATE", "Roller" to "ROLLER", "BMX" to "BMX")
-    var selected by remember { mutableStateOf(0) }
+    var selectedTabIndex by remember { mutableStateOf(0) }
 
-    var products by remember { mutableStateOf<List<Producto>>(emptyList()) }
+    // State for the complete list of products fetched from the API
+    var allProducts by remember { mutableStateOf<List<Producto>>(emptyList()) }
+    // State for only the products visible in the selected tab
+    var filteredProducts by remember { mutableStateOf<List<Producto>>(emptyList()) }
+
     var error by remember { mutableStateOf<String?>(null) }
-    var loading by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(true) } // Start loading immediately
 
-    LaunchedEffect(selected) {
+    // 1. Fetch all products ONCE when the screen first launches
+    LaunchedEffect(Unit) { // `Unit` makes this run only once
         loading = true
         error = null
-
         try {
-            val allProducts = api.getProducts()
-
-            // Filtrar por categoría elegida
-            val category = tabs[selected].second
-            products = allProducts//.filter { it.category.equals(category) }
-
+            allProducts = api.getProducts()
         } catch (e: Exception) {
-            error = e.message
+            error = "Failed to load products: ${e.message}"
         }
-
         loading = false
     }
+
+    // 2. Re-filter the list whenever the fetched products or the selected tab change
+    LaunchedEffect(allProducts, selectedTabIndex) {
+        if (allProducts.isNotEmpty()) {
+            val selectedCategory = tabs[selectedTabIndex].second
+            filteredProducts = allProducts.filter { it.category == selectedCategory }
+        }
+    }
+
+    // --- END: Corrected Logic ---
 
     Scaffold(
         topBar = {
@@ -80,11 +92,11 @@ fun CatalogScreen(nav: NavHostController) {
         ) {
 
             // Tabs
-            TabRow(selectedTabIndex = selected) {
+            TabRow(selectedTabIndex = selectedTabIndex) {
                 tabs.forEachIndexed { i, (label, _) ->
                     Tab(
-                        selected = i == selected,
-                        onClick = { selected = i },
+                        selected = i == selectedTabIndex,
+                        onClick = { selectedTabIndex = i }, // Update the selected tab index
                         text = { Text(label) }
                     )
                 }
@@ -103,15 +115,17 @@ fun CatalogScreen(nav: NavHostController) {
                     }
                 }
 
-                products.isEmpty() -> {
+                // Use the filtered list for the UI
+                filteredProducts.isEmpty() -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("No hay productos")
+                        Text("No hay productos en esta categoría") // More specific message
                     }
                 }
 
                 else -> {
+                    // Use the filtered list for the LazyColumn
                     LazyColumn(Modifier.fillMaxSize()) {
-                        items(products, key = { it.id }) { prod ->
+                        items(filteredProducts, key = { it.id }) { prod ->
                             ListItem(
                                 headlineContent = { Text(prod.name) },
                                 supportingContent = { Text("$${prod.price}") },
@@ -128,3 +142,4 @@ fun CatalogScreen(nav: NavHostController) {
         }
     }
 }
+

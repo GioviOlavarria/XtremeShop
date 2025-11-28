@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.map
 
 class RepositorioProductoImpl(private val dao: ProductoDao): RepositorioProductos {
     private fun EntidadProducto.toDomain() =
-        Producto(id, name, price, description, Category.valueOf(category))
-    private fun Producto.toEntity() = EntidadProducto(id, name, price, description, category.name)
+        Producto(id, name, price, description, category)
+    private fun Producto.toEntity() = EntidadProducto(id, name, price, description, category)
 
     override fun observeAll(): Flow<List<Producto>> =
         dao.observeAll().map { it.map { e -> e.toDomain() } }
