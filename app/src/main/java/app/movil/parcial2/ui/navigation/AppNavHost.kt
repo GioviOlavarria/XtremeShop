@@ -11,12 +11,14 @@ import app.movil.parcial2.ui.screens.about.about
 import app.movil.parcial2.ui.screens.admin.PantallaAdmin
 import app.movil.parcial2.ui.screens.detail.DetailScreen
 import app.movil.parcial2.ui.screens.catalog.CatalogScreen
+import app.movil.parcial2.ui.screens.registro.PantallaRegistro
 
 @Composable
 fun AppNavHost(nav: NavHostController) {
     NavHost(navController = nav, startDestination = Rutas.LOGIN) {
 
         composable(Rutas.LOGIN)   { LoginScreen(nav) }
+        composable(Rutas.REGISTER) { PantallaRegistro(nav = nav) }
         composable(Rutas.HOME)    { HomeScreen(nav) }
         composable(Rutas.CATALOG) { CatalogScreen(nav) }
         composable(Rutas.CART)    { CartScreen(nav) }

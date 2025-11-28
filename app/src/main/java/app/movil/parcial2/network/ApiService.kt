@@ -9,11 +9,14 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
+import app.movil.parcial2.domain.model.User
+
 interface ApiService {
 
+    // Productos
     @GET("api/products")
     suspend fun getProducts(): List<Producto>
-
+    // Get producto por ID
     @GET("api/products/{id}")
     suspend fun getProductById(@Path("id") id: Long): Producto
 
@@ -25,4 +28,12 @@ interface ApiService {
 
     @DELETE("api/products/{id}")
     suspend fun deleteProduct(@Path("id") id: Long): Response<Unit>
+
+    // Usuarios
+    // Post usuario
+    @POST("api/users")
+    suspend fun registerUser(@Body user: User): User
+    // Fetch  users
+    @GET("api/users")
+    suspend fun getUsers(): List<User>
 }

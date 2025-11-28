@@ -1,19 +1,23 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 package app.movil.parcial2.ui.screens.login
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,8 +44,10 @@ fun LoginScreen(
     var pass by remember { mutableStateOf("") }
     val state by vm.state.collectAsState()
 
+    // This part is correct and remains the same
     if (state.user != null) {
         LaunchedEffect(Unit) {
+            sesion.currentUser = state.user
             nav.navigate(Rutas.HOME) {
                 popUpTo(Rutas.LOGIN) { inclusive = true }
             }
@@ -62,13 +68,15 @@ fun LoginScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp)
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally // Center content like the loader
                 ) {
                     OutlinedTextField(
                         value = user,
                         onValueChange = { user = it },
                         label = { Text("Usuario") },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isLoading // Disable field when loading
                     )
                     OutlinedTextField(
                         value = pass,
@@ -77,8 +85,11 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
-                        visualTransformation = PasswordVisualTransformation()
+                        visualTransformation = PasswordVisualTransformation(),
+                        enabled = !state.isLoading // Disable field when loading
                     )
+
+                    // Display error message if it exists
                     state.error?.let {
                         Text(
                             text = it,
@@ -86,17 +97,35 @@ fun LoginScreen(
                             modifier = Modifier.padding(top = 8.dp)
                         )
                     }
-                    Button(
-                        onClick = { vm.login(user, pass) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
+
+                    // Show a loading indicator or the button text
+                    if (state.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+                    } else {
+                        Button(
+                            onClick = { vm.login(user, pass) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                            enabled = !state.isLoading // Disable button when loading
+                        ) {
+                            Text("Entrar")
+                        }
+                    }
+
+                    // Button to navigate to the registration screen
+                    TextButton(
+                        onClick = { nav.navigate(Rutas.REGISTER) },
+                        modifier = Modifier.padding(top = 8.dp),
+                        enabled = !state.isLoading
                     ) {
-                        Text("Entrar")
+                        Text("No tengo una cuenta. Registrarme")
                     }
-                    LaunchedEffect(state.user) {
-                        state.user?.let { sesion.currentUser = it }
-                    }
+
+                    // This logic is now handled in the first LaunchedEffect
+                    // LaunchedEffect(state.user) {
+                    //     state.user?.let { sesion.currentUser = it }
+                    // }
                 }
             }
         }
