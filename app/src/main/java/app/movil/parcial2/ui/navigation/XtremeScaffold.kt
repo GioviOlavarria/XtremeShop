@@ -121,13 +121,12 @@ fun XtremeScaffold(
                         }
                     },
                     actions = {
-                        if (showBack) {
-                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Menu,
-                                    contentDescription = "Menú de navegación"
-                                )
-                            }
+                        // This will always show the hamburger menu icon in the actions section.
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = "Menú de navegación"
+                            )
                         }
                     }
                 )

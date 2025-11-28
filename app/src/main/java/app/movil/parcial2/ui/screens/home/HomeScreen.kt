@@ -1,5 +1,6 @@
 package app.movil.parcial2.ui.screens.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,12 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import app.movil.parcial2.domain.model.Role
 import app.movil.parcial2.ui.navigation.Rutas
 import app.movil.parcial2.ui.navigation.XtremeScaffold
 import app.movil.parcial2.util.sesion
+import app.movil.parcial2.R
 
 @Composable
 fun HomeScreen(nav: NavHostController) {
@@ -39,6 +43,19 @@ fun HomeScreen(nav: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // --- Icono de la tienda ---
+            Image(
+                painter = painterResource(id = R.drawable.icon_shop), // Your image file
+                contentDescription = "Banner de XtremeShop", // Accessibility text
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp), // Adjust height as needed
+                contentScale = ContentScale.Crop // Scales the image to fill the width
+            )
+
+            // --- Other content on your home screen ---
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "Bienvenido a XtremeShop",
                 style = MaterialTheme.typography.titleLarge

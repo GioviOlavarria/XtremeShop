@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,6 +40,7 @@ import app.movil.parcial2.network.ApiService
 import app.movil.parcial2.network.RetrofitClient
 import app.movil.parcial2.util.sesion
 import kotlinx.coroutines.launch
+import app.movil.parcial2.ui.navigation.XtremeScaffold
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,23 +85,20 @@ fun PantallaAdmin(nav: NavHostController) {
     var catExpanded by remember { mutableStateOf(false) }
     val categorias = remember { Category.values().toList() }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Panel de administración", style = MaterialTheme.typography.titleLarge) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
-            )
-        },
+    XtremeScaffold(
+        nav = nav,
+        title = "Panel de administración",
+        showBack = true, // This enables the back button
         snackbarHost = { SnackbarHost(snackbar) }
-    ) { inner ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(inner)
+                .padding(innerPadding) // Use padding from XtremeScaffold
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
 
-            Text("Crear / Modificar producto", style = MaterialTheme.typography.titleMedium)
+            Text("Crear / Modificar producto", style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
 
             Spacer(Modifier.height(8.dp))
 
@@ -223,7 +222,7 @@ fun PantallaAdmin(nav: NavHostController) {
 
             Spacer(Modifier.height(16.dp))
 
-            Text("Listado", style = MaterialTheme.typography.titleMedium)
+            Text("Listado", style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(8.dp))
 
             LazyColumn(
