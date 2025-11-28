@@ -125,7 +125,7 @@ fun CatalogScreen(nav: NavHostController) {
                 else -> {
                     // Use the filtered list for the LazyColumn
                     LazyColumn(Modifier.fillMaxSize()) {
-                        items(filteredProducts, key = { it.id }) { prod ->
+                        items(filteredProducts, key = { it.id!! }) { prod ->
                             ListItem(
                                 headlineContent = { Text(prod.name) },
                                 supportingContent = { Text("$${prod.price}") },

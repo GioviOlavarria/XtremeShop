@@ -23,7 +23,7 @@ class RepositorioProductoImpl(private val dao: ProductoDao): RepositorioProducto
 
     override suspend fun create(product: Producto) {
 
-        require(product.id > 0){"ID inválido"}
+        product.id?.let { require(it > 0){"ID inválido"} }
         require(product.name.isNotBlank()){"Nombre obligatorio"}
         require(product.description.isNotBlank()){"Descripción obligatoria"}
         require(product.price > 0){"Precio debe ser > 0"}

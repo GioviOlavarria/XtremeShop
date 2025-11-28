@@ -23,22 +23,22 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
-
-
-import app.movil.parcial2.data.RepositorioProductoImpl
-import app.movil.parcial2.data.local.BaseDeDatos
 import app.movil.parcial2.domain.model.Category
 import app.movil.parcial2.domain.model.Producto
 import app.movil.parcial2.domain.model.Role
+import app.movil.parcial2.network.ApiService
+import app.movil.parcial2.network.RetrofitClient
 import app.movil.parcial2.util.sesion
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,14 +51,10 @@ fun PantallaAdmin(nav: NavHostController) {
         return
     }
 
-    val ctx = LocalContext.current
-    val db = remember { BaseDeDatos.get(ctx) }
-    val repo = remember { RepositorioProductoImpl(db.productoDao()) }
-
-    val productos by repo.observeAll().collectAsState(initial = emptyList())
+    val api = remember { RetrofitClient.instance.create(ApiService::class.java) }
+    var productos by remember { mutableStateOf<List<Producto>>(emptyList()) }
     val scope = rememberCoroutineScope()
     val snackbar = remember { SnackbarHostState() }
-
 
     var id by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
@@ -67,9 +63,22 @@ fun PantallaAdmin(nav: NavHostController) {
     var categoria by remember { mutableStateOf("SKATE") }
 
     fun limpiar() {
-        id = ""; nombre = ""; precio = ""; descripcion = ""; categoria = categoria
+        id = ""; nombre = ""; precio = ""; descripcion = ""; categoria = "SKATE"
     }
 
+    fun refrescar() {
+        scope.launch {
+            try {
+                productos = api.getProducts()
+            } catch (e: Exception) {
+                snackbar.showSnackbar("Error al refrescar: ${e.message}")
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        refrescar()
+    }
 
     var catExpanded by remember { mutableStateOf(false) }
     val categorias = remember { Category.values().toList() }
@@ -125,20 +134,23 @@ fun PantallaAdmin(nav: NavHostController) {
             )
 
 
-            Box(modifier = Modifier.fillMaxWidth()) {
+            ExposedDropdownMenuBox(
+                expanded = catExpanded,
+                onExpandedChange = { catExpanded = !catExpanded }
+            ) {
                 OutlinedTextField(
                     value = categoria,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Categoría") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(catExpanded) },
                     modifier = Modifier
+                        .menuAnchor()
                         .fillMaxWidth()
-                        .clickable { catExpanded = true }
                 )
-                DropdownMenu(
+                ExposedDropdownMenu(
                     expanded = catExpanded,
-                    onDismissRequest = { catExpanded = false },
-                    modifier = Modifier.fillMaxWidth()
+                    onDismissRequest = { catExpanded = false }
                 ) {
                     categorias.forEach { cat ->
                         DropdownMenuItem(
@@ -160,14 +172,13 @@ fun PantallaAdmin(nav: NavHostController) {
                 Button(onClick = {
                     scope.launch {
                         try {
-
-                            val pid = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido")
                             val pprice = precio.toDoubleOrNull() ?: throw IllegalArgumentException("Precio inválido")
                             if (nombre.isBlank() || descripcion.isBlank()) throw IllegalArgumentException("Campos vacíos")
 
-                            repo.create(Producto(pid, nombre.trim(), pprice, descripcion.trim(), categoria))
+                            api.createProduct(Producto(id = null, name = nombre.trim(), price = pprice, description = descripcion.trim(), category = categoria))
                             snackbar.showSnackbar("Producto creado")
                             limpiar()
+                            refrescar()
                         } catch (e: Exception) {
                             snackbar.showSnackbar("Error: ${e.message}")
                         }
@@ -183,9 +194,10 @@ fun PantallaAdmin(nav: NavHostController) {
                             val pprice = precio.toDoubleOrNull() ?: throw IllegalArgumentException("Precio inválido")
                             if (nombre.isBlank() || descripcion.isBlank()) throw IllegalArgumentException("Campos vacíos")
 
-                            repo.update(Producto(pid, nombre.trim(), pprice, descripcion.trim(), categoria))
+                            api.updateProduct(pid, Producto(pid, nombre.trim(), pprice, descripcion.trim(), categoria))
                             snackbar.showSnackbar("Producto actualizado")
                             limpiar()
+                            refrescar()
                         } catch (e: Exception) {
                             snackbar.showSnackbar("Error: ${e.message}")
                         }
@@ -198,9 +210,10 @@ fun PantallaAdmin(nav: NavHostController) {
                     scope.launch {
                         try {
                             val pid = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido")
-                            repo.delete(pid)
+                            api.deleteProduct(pid)
                             snackbar.showSnackbar("Producto eliminado")
                             limpiar()
+                            refrescar()
                         } catch (e: Exception) {
                             snackbar.showSnackbar("Error: ${e.message}")
                         }
@@ -216,7 +229,7 @@ fun PantallaAdmin(nav: NavHostController) {
             LazyColumn(
                 modifier = Modifier.weight(1f)
             ) {
-                items(productos, key = { it.id }) { pdt ->
+                items(productos, key = { it.id!! }) { pdt ->
                     ListItem(
                         headlineContent = { Text(pdt.name) },
                         supportingContent = { Text("${pdt.category} • $${"%.2f".format(pdt.price)}") },
@@ -224,8 +237,9 @@ fun PantallaAdmin(nav: NavHostController) {
                             IconButton(onClick = {
                                 scope.launch {
                                     try {
-                                        repo.delete(pdt.id)
+                                        api.deleteProduct(pdt.id!!)
                                         snackbar.showSnackbar("Producto eliminado")
+                                        refrescar()
                                     } catch (e: Exception) {
                                         snackbar.showSnackbar("Error: ${e.message}")
                                     }
@@ -237,8 +251,7 @@ fun PantallaAdmin(nav: NavHostController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-
-                                id = pdt.id.toString()
+                                id = pdt.id!!.toString()
                                 nombre = pdt.name
                                 precio = pdt.price.toString()
                                 descripcion = pdt.description
