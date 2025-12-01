@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://10.0.2.2:8080/"
+    private const val BASE_URL = "https://apiappmovil-production.up.railway.app/"
     // IMPORTANTE: 10.0.2.2 = localhost del emulador
 
     private val client by lazy {

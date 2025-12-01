@@ -9,4 +9,5 @@ object Rutas {
     const val CART = "cart"
     const val ABOUT = "about"
     const val ADMIN = "admin"
+    const val PAYMENT = "payment"
 }

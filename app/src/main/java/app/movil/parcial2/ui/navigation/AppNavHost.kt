@@ -11,12 +11,15 @@ import app.movil.parcial2.ui.screens.about.about
 import app.movil.parcial2.ui.screens.admin.PantallaAdmin
 import app.movil.parcial2.ui.screens.detail.DetailScreen
 import app.movil.parcial2.ui.screens.catalog.CatalogScreen
+import app.movil.parcial2.ui.screens.payment.PaymentScreen
 import app.movil.parcial2.ui.screens.registro.PantallaRegistro
 
 @Composable
 fun AppNavHost(nav: NavHostController) {
-    NavHost(navController = nav, startDestination = Rutas.LOGIN) {
-
+    NavHost(
+        navController = nav,
+        startDestination = Rutas.LOGIN
+    ) {
         composable(Rutas.LOGIN)   { LoginScreen(nav) }
         composable(Rutas.REGISTER) { PantallaRegistro(nav = nav) }
         composable(Rutas.HOME)    { HomeScreen(nav) }
@@ -24,7 +27,7 @@ fun AppNavHost(nav: NavHostController) {
         composable(Rutas.CART)    { CartScreen(nav) }
         composable(Rutas.ABOUT)   { about(nav) }
         composable(Rutas.ADMIN)   { PantallaAdmin(nav) }
-
+        composable(Rutas.PAYMENT) { PaymentScreen(nav) }
 
         composable("${Rutas.DETAIL}/{id}") { backStack ->
             val id = backStack.arguments?.getString("id")?.toLongOrNull() ?: 0L
