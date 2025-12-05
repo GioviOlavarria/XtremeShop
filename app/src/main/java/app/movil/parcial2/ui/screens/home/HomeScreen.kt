@@ -43,17 +43,17 @@ fun HomeScreen(nav: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // --- Icono de la tienda ---
+
             Image(
-                painter = painterResource(id = R.drawable.icon_shop), // Your image file
-                contentDescription = "Banner de XtremeShop", // Accessibility text
+                painter = painterResource(id = R.drawable.icon_shop),
+                contentDescription = "Banner de XtremeShop",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp), // Adjust height as needed
-                contentScale = ContentScale.Crop // Scales the image to fill the width
+                    .height(240.dp),
+                contentScale = ContentScale.Crop
             )
 
-            // --- Other content on your home screen ---
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(

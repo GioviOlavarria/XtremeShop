@@ -47,18 +47,18 @@ fun CatalogScreen(nav: NavHostController) {
         RetrofitClient.instance.create(ApiService::class.java)
     }
 
-    // --- START: Corrected Logic ---
+
 
     val tabs = listOf("Skate" to "SKATE", "Roller" to "ROLLER", "BMX" to "BMX")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
-    // State for the complete list of products fetched from the API
+
     var allProducts by remember { mutableStateOf<List<Producto>>(emptyList()) }
-    // State for only the products visible in the selected tab
+
     var filteredProducts by remember { mutableStateOf<List<Producto>>(emptyList()) }
 
     var error by remember { mutableStateOf<String?>(null) }
-    var loading by remember { mutableStateOf(true) } // Start loading immediately
+    var loading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         loading = true
@@ -71,7 +71,7 @@ fun CatalogScreen(nav: NavHostController) {
         loading = false
     }
 
-    // 2. Re-filter the list whenever the fetched products or the selected tab change
+
     LaunchedEffect(allProducts, selectedTabIndex) {
         if (allProducts.isNotEmpty()) {
             val selectedCategory = tabs[selectedTabIndex].second
@@ -90,7 +90,7 @@ fun CatalogScreen(nav: NavHostController) {
                 .fillMaxSize()
         ) {
 
-            // Tabs
+
             TabRow(selectedTabIndex = selectedTabIndex) {
                 tabs.forEachIndexed { index, (label, _) ->
                     Tab(
@@ -127,7 +127,7 @@ fun CatalogScreen(nav: NavHostController) {
                     }
                 }
 
-                // Use the filtered list for the UI
+
                 filteredProducts.isEmpty() -> {
                     Box(
                         modifier = Modifier

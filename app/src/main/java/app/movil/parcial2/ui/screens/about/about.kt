@@ -41,13 +41,13 @@ fun about(nav: NavHostController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Somos 2 compañeros de Duoc UC realizando un parcial de Desarrollo de Aplicaciones Móviles.",
+                        text = "Somos 2 compañeros de Duoc UC realizando un proyecto para Desarrollo de Aplicaciones móviles.",
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = "XtremeShop es una tienda ficticia de deportes extremos: skate, roller y BMX.",
+                        text = "XtremeShop es el proyecto, el cual es una tienda ficticia de deportes extremos: skate, roller y BMX.",
                         textAlign = TextAlign.Center
                     )
                 }

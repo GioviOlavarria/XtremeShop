@@ -44,7 +44,7 @@ fun LoginScreen(
     var pass by remember { mutableStateOf("") }
     val state by vm.state.collectAsState()
 
-    // This part is correct and remains the same
+
     if (state.user != null) {
         LaunchedEffect(Unit) {
             sesion.currentUser = state.user
@@ -69,14 +69,14 @@ fun LoginScreen(
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally // Center content like the loader
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     OutlinedTextField(
                         value = user,
                         onValueChange = { user = it },
                         label = { Text("Usuario") },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isLoading // Disable field when loading
+                        enabled = !state.isLoading
                     )
                     OutlinedTextField(
                         value = pass,
@@ -86,10 +86,10 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         visualTransformation = PasswordVisualTransformation(),
-                        enabled = !state.isLoading // Disable field when loading
+                        enabled = !state.isLoading
                     )
 
-                    // Display error message if it exists
+
                     state.error?.let {
                         Text(
                             text = it,
@@ -98,7 +98,7 @@ fun LoginScreen(
                         )
                     }
 
-                    // Show a loading indicator or the button text
+
                     if (state.isLoading) {
                         CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
                     } else {
@@ -107,13 +107,13 @@ fun LoginScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 16.dp),
-                            enabled = !state.isLoading // Disable button when loading
+                            enabled = !state.isLoading
                         ) {
                             Text("Entrar")
                         }
                     }
 
-                    // Button to navigate to the registration screen
+
                     TextButton(
                         onClick = { nav.navigate(Rutas.REGISTER) },
                         modifier = Modifier.padding(top = 8.dp),
@@ -122,10 +122,6 @@ fun LoginScreen(
                         Text("No tengo una cuenta. Registrarme")
                     }
 
-                    // This logic is now handled in the first LaunchedEffect
-                    // LaunchedEffect(state.user) {
-                    //     state.user?.let { sesion.currentUser = it }
-                    // }
                 }
             }
         }

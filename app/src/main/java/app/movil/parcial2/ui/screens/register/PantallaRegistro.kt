@@ -1,5 +1,3 @@
-// Create a new file: app/movil/parcial2/ui/screens/registro/PantallaRegistro.kt
-
 package app.movil.parcial2.ui.screens.registro
 
 import androidx.compose.foundation.layout.*
@@ -30,7 +28,7 @@ fun PantallaRegistro(nav: NavHostController) {
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var selectedRole by remember { mutableStateOf(Role.USER) } // Default role is USER
+    var selectedRole by remember { mutableStateOf(Role.USER) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -67,7 +65,7 @@ fun PantallaRegistro(nav: NavHostController) {
             )
             Spacer(Modifier.height(16.dp))
 
-            // Role Selection
+
             Text("Selecciona un rol:", style = MaterialTheme.typography.bodyMedium)
             Row(Modifier.fillMaxWidth()) {
                 Role.values().forEach { role ->
@@ -90,10 +88,9 @@ fun PantallaRegistro(nav: NavHostController) {
                                 val newUser = User(username = username.trim(), password = password, role = selectedRole)
                                 api.registerUser(newUser)
                                 snackbarHostState.showSnackbar("¡Usuario registrado con éxito!")
-                                // Navigate to login after a short delay
+
                                 kotlinx.coroutines.delay(1000)
                                 nav.navigate(Rutas.LOGIN) {
-                                    // Clear back stack to prevent going back to register screen
                                     popUpTo(Rutas.LOGIN) { inclusive = true }
                                 }
                             } catch (e: Exception) {
