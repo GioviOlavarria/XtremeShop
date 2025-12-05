@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import app.movil.parcial2.domain.model.Role
 import app.movil.parcial2.ui.navigation.Rutas
 import app.movil.parcial2.util.sesion
 
@@ -44,11 +45,16 @@ fun LoginScreen(
     var pass by remember { mutableStateOf("") }
     val state by vm.state.collectAsState()
 
-
-    if (state.user != null) {
-        LaunchedEffect(Unit) {
-            sesion.currentUser = state.user
-            nav.navigate(Rutas.HOME) {
+    val loggedUser = state.user
+    if (loggedUser != null) {
+        LaunchedEffect(loggedUser) {
+            sesion.currentUser = loggedUser
+            val target = if (loggedUser.role == Role.ADMIN) {
+                Rutas.ADMIN
+            } else {
+                Rutas.CATALOG
+            }
+            nav.navigate(target) {
                 popUpTo(Rutas.LOGIN) { inclusive = true }
             }
         }
@@ -69,6 +75,7 @@ fun LoginScreen(
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     OutlinedTextField(
@@ -78,41 +85,36 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading
                     )
+
                     OutlinedTextField(
                         value = pass,
                         onValueChange = { pass = it },
                         label = { Text("Contraseña") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
                         visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading
                     )
 
-
-                    state.error?.let {
+                    if (state.error != null) {
                         Text(
-                            text = it,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(top = 8.dp)
+                            text = state.error ?: "",
+                            color = MaterialTheme.colorScheme.error
                         )
                     }
 
-
                     if (state.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
                     } else {
                         Button(
                             onClick = { vm.login(user, pass) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 16.dp),
-                            enabled = !state.isLoading
+                                .padding(top = 8.dp),
+                            enabled = user.isNotBlank() && pass.isNotBlank()
                         ) {
                             Text("Entrar")
                         }
                     }
-
 
                     TextButton(
                         onClick = { nav.navigate(Rutas.REGISTER) },
@@ -121,7 +123,6 @@ fun LoginScreen(
                     ) {
                         Text("No tengo una cuenta. Registrarme")
                     }
-
                 }
             }
         }

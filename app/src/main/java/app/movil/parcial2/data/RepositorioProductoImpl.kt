@@ -8,33 +8,37 @@ import app.movil.parcial2.domain.repository.RepositorioProductos
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class RepositorioProductoImpl(private val dao: ProductoDao): RepositorioProductos {
+class RepositorioProductoImpl(private val dao: ProductoDao) : RepositorioProductos {
+
     private fun EntidadProducto.toDomain() =
-        Producto(id, name, price, description, category)
-    private fun Producto.toEntity() = EntidadProducto(id, name, price, description, category)
+        Producto(id, name, price, description, category, null)
+
+    private fun Producto.toEntity() =
+        EntidadProducto(id, name, price, description, category)
 
     override fun observeAll(): Flow<List<Producto>> =
-        dao.observeAll().map { it.map { e -> e.toDomain() } }
+        dao.observeAll().map { list -> list.map { it.toDomain() } }
 
     override fun observeByCategory(category: Category): Flow<List<Producto>> =
-        dao.observeByCategory(category.name).map { it.map { e -> e.toDomain() } }
+        dao.observeByCategory(category.name).map { list -> list.map { it.toDomain() } }
 
-    override suspend fun get(id: Long) = dao.getById(id)?.toDomain()
+    override suspend fun get(id: Long): Producto? =
+        dao.getById(id)?.toDomain()
 
     override suspend fun create(product: Producto) {
-
-        product.id?.let { require(it > 0){"ID inválido"} }
-        require(product.name.isNotBlank()){"Nombre obligatorio"}
-        require(product.description.isNotBlank()){"Descripción obligatoria"}
-        require(product.price > 0){"Precio debe ser > 0"}
+        require(product.name.isNotBlank())
+        require(product.description.isNotBlank())
+        require(product.price > 0)
         dao.insert(product.toEntity())
     }
+
     override suspend fun update(product: Producto) {
         require(product.name.isNotBlank())
         require(product.description.isNotBlank())
         require(product.price > 0)
         dao.update(product.toEntity())
     }
+
     override suspend fun delete(id: Long) {
         dao.getById(id)?.let { dao.delete(it) }
     }

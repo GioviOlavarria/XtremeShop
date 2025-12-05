@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
+
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -76,6 +77,9 @@ dependencies {
     implementation(libs.androidx.runtime)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.compose.foundation)
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
     // DataStore
     implementation(libs.androidx.datastore.preferences)
 
