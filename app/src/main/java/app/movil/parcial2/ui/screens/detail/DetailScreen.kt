@@ -49,6 +49,7 @@ import kotlinx.coroutines.launch
 
 import app.movil.parcial2.ui.navigation.XtremeScaffold
 import app.movil.parcial2.ui.theme.categoryIconRes
+import app.movil.parcial2.ui.navigation.Rutas
 
 
 import androidx.compose.ui.platform.LocalContext
@@ -161,6 +162,16 @@ fun DetailScreen(nav: NavHostController, productId: Long) {
                                 scope.launch {
                                     cartRepo.addOrInc(prod.id!!, prod.name, prod.price)
                                     snackbar.showSnackbar("Producto agregado al carrito")
+
+                                    nav.navigate(Rutas.HOME) {
+                                        // Limpia la pila de navegación para que el usuario no pueda
+                                        // volver a la pantalla de detalles con el botón de retroceso.
+                                        popUpTo(Rutas.HOME) {
+                                            inclusive = true
+                                        }
+                                        // Evita crear una nueva instancia del Home si ya existe.
+                                        launchSingleTop = true
+                                    }
                                 }
                             },
                             modifier = Modifier.fillMaxWidth()

@@ -1,6 +1,7 @@
 package app.movil.parcial2.ui.screens.cart
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import app.movil.parcial2.data.local.BaseDeDatos
 import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 import app.movil.parcial2.ui.navigation.Rutas
+import app.movil.parcial2.ui.navigation.XtremeScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,7 +42,6 @@ fun CartScreen(
     nav: NavHostController
 ) {
     val ctx = LocalContext.current
-
     val db = remember { BaseDeDatos.get(ctx.applicationContext) }
     val cartDao = remember { db.carritoDao() }
     val scope = rememberCoroutineScope()
@@ -52,13 +52,10 @@ fun CartScreen(
         items.sumOf { it.unitPrice * it.quantity }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Carrito") }
-            )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbar) }
+    XtremeScaffold(
+        nav = nav,
+        title = "Carrito",
+        showBack = true
     ) { p ->
         if (items.isEmpty()) {
             Box(
