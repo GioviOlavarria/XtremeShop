@@ -10,11 +10,11 @@ import androidx.compose.ui.graphics.Color
 
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFF00796B),         // Verde Teal
+    primary = Color(0xFF00796B),
     onPrimary = Color.White,
-    secondary = Color(0xFFFFA000),       // Ámbar
+    secondary = Color(0xFFFFA000),
     onSecondary = Color.Black,
-    tertiary = Color(0xFF2196F3),        // Azul
+    tertiary = Color(0xFF2196F3),
     background = Color(0xFFF5F5F5),
     onBackground = Color(0xFF1C1B1F),
     surface = Color.White,

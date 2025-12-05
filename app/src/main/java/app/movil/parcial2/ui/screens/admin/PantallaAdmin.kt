@@ -88,12 +88,12 @@ fun PantallaAdmin(nav: NavHostController) {
     XtremeScaffold(
         nav = nav,
         title = "Panel de administración",
-        showBack = true, // This enables the back button
+        showBack = true,
         snackbarHost = { SnackbarHost(snackbar) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding) // Use padding from XtremeScaffold
+                .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
