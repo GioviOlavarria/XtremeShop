@@ -105,15 +105,6 @@ fun HomeScreen(nav: NavHostController) {
                 Spacer(Modifier.height(12.dp))
 
                 Button(
-                    onClick = { nav.navigate(Rutas.CART) },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ir al Carrito")
-                }
-
-                Spacer(Modifier.height(12.dp))
-
-                Button(
                     onClick = { nav.navigate(Rutas.ABOUT) },
                     modifier = Modifier.fillMaxWidth()
                 ) {

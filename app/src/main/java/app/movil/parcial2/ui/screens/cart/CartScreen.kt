@@ -1,5 +1,6 @@
 package app.movil.parcial2.ui.screens.cart
 
+import android.app.Application
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,29 +10,24 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
 
-import app.movil.parcial2.data.local.BaseDeDatos
 import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 import app.movil.parcial2.ui.navigation.Rutas
 import app.movil.parcial2.ui.navigation.XtremeScaffold
@@ -39,18 +35,13 @@ import app.movil.parcial2.ui.navigation.XtremeScaffold
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartScreen(
-    nav: NavHostController
+    nav: NavHostController,
+    vm: CartViewModel = viewModel(
+        factory = ViewModelProvider.AndroidViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
 ) {
-    val ctx = LocalContext.current
-    val db = remember { BaseDeDatos.get(ctx.applicationContext) }
-    val cartDao = remember { db.carritoDao() }
-    val scope = rememberCoroutineScope()
-    val snackbar = remember { SnackbarHostState() }
-
-    val items by cartDao.observeCart().collectAsState(initial = emptyList())
-    val total = remember(items) {
-        items.sumOf { it.unitPrice * it.quantity }
-    }
+    val items by vm.cartItems.collectAsState()
+    val total by vm.totalPrice.collectAsState()
 
     XtremeScaffold(
         nav = nav,
@@ -80,28 +71,9 @@ fun CartScreen(
                     items(items, key = { it.rowId }) { item ->
                         CartRow(
                             item = item,
-                            onInc = {
-                                scope.launch {
-                                    cartDao.updateQuantity(item.rowId, item.quantity + 1)
-                                }
-                            },
-                            onDec = {
-                                scope.launch {
-                                    val newQty = item.quantity - 1
-                                    if (newQty <= 0) {
-                                        cartDao.deleteById(item.rowId)
-                                        snackbar.showSnackbar("Producto eliminado del carrito")
-                                    } else {
-                                        cartDao.updateQuantity(item.rowId, newQty)
-                                    }
-                                }
-                            },
-                            onDelete = {
-                                scope.launch {
-                                    cartDao.deleteById(item.rowId)
-                                    snackbar.showSnackbar("Producto eliminado del carrito")
-                                }
-                            }
+                            onInc = { vm.incrementItem(item) },
+                            onDec = { vm.decrementItem(item) },
+                            onDelete = { vm.deleteItem(item) }
                         )
                         Divider()
                     }
@@ -118,11 +90,9 @@ fun CartScreen(
                     )
                     Spacer(Modifier.height(8.dp))
                     Button(
-                        onClick = {
-
-                            nav.navigate(Rutas.PAYMENT)
-                        },
-                        modifier = Modifier.fillMaxWidth()
+                        onClick = { nav.navigate(Rutas.PAYMENT) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = items.isNotEmpty()
                     ) {
                         Text("Finalizar compra")
                     }

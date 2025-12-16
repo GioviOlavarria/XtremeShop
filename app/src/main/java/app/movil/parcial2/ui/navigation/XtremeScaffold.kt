@@ -141,6 +141,16 @@ fun XtremeScaffold(
                                 )
                             }
                         }
+                    },
+                    actions = {
+                        if (user?.role != Role.ADMIN) {
+                            IconButton(onClick = { nav.navigate(Rutas.CART) }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ShoppingCart,
+                                    contentDescription = "Ir al carrito"
+                                )
+                            }
+                        }
                     }
                 )
             },

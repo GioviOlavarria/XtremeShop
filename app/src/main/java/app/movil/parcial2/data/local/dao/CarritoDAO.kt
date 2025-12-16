@@ -13,6 +13,9 @@ interface CarritoDAO {
     @Query("SELECT * FROM items_carrito ORDER BY rowId")
     fun observeCart(): Flow<List<EntidadItemCarrito>>
 
+    @Query("SELECT SUM(unitPrice * quantity) FROM items_carrito")
+    fun observeTotalPrice(): Flow<Double?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(item: EntidadItemCarrito)
 

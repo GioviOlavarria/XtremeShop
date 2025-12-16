@@ -50,12 +50,8 @@ fun LoginScreen(
     if (loggedUser != null) {
         LaunchedEffect(loggedUser) {
             sesion.currentUser = loggedUser
-            val target = if (loggedUser.role == Role.ADMIN) {
-                Rutas.ADMIN
-            } else {
-                Rutas.CATALOG
-            }
-            nav.navigate(target) {
+            // Navega siempre a HOME, XtremeScaffold decidirá qué mostrar
+            nav.navigate(Rutas.HOME) {
                 popUpTo(Rutas.LOGIN) { inclusive = true }
             }
         }
@@ -108,12 +104,25 @@ fun LoginScreen(
                     } else {
                         Button(
                             onClick = { 
-                                if (user.trim().equals("admin", ignoreCase = true)) {
+                                val username = user.trim()
+                                val password = pass.trim()
+
+                                if (username.equals("admin", ignoreCase = true)) {
                                     sesion.currentUser = User(
-                                        id = -1, // Dummy ID for local session
+                                        id = -1,
                                         username = "admin",
                                         password = "1234",
                                         role = Role.ADMIN
+                                    )
+                                    nav.navigate(Rutas.HOME) {
+                                        popUpTo(Rutas.LOGIN) { inclusive = true }
+                                    }
+                                } else if (username.equals("admin_user", ignoreCase = true) && password == "1234") {
+                                    sesion.currentUser = User(
+                                        id = -2,
+                                        username = "admin_user",
+                                        password = "1234",
+                                        role = Role.USER
                                     )
                                     nav.navigate(Rutas.HOME) {
                                         popUpTo(Rutas.LOGIN) { inclusive = true }
