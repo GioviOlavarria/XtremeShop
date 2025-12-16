@@ -9,6 +9,7 @@ import app.movil.parcial2.ui.screens.login.LoginScreen
 import app.movil.parcial2.ui.screens.cart.CartScreen
 import app.movil.parcial2.ui.screens.about.about
 import app.movil.parcial2.ui.screens.admin.PantallaAdmin
+import app.movil.parcial2.ui.screens.dashboard.DashboardScreen
 import app.movil.parcial2.ui.screens.detail.DetailScreen
 import app.movil.parcial2.ui.screens.catalog.CatalogScreen
 import app.movil.parcial2.ui.screens.payment.PaymentScreen
@@ -27,6 +28,7 @@ fun AppNavHost(nav: NavHostController) {
         composable(Rutas.CART)    { CartScreen(nav) }
         composable(Rutas.ABOUT)   { about(nav) }
         composable(Rutas.ADMIN)   { PantallaAdmin(nav) }
+        composable(Rutas.DASHBOARD) { DashboardScreen(nav) }
         composable(Rutas.PAYMENT) { PaymentScreen(nav) }
 
         composable("${Rutas.DETAIL}/{id}") { backStack ->

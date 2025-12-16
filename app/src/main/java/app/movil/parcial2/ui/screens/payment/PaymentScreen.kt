@@ -33,6 +33,7 @@ import androidx.navigation.NavHostController
 import app.movil.parcial2.data.local.BaseDeDatos
 import app.movil.parcial2.data.local.entidades.EntidadItemCarrito
 import app.movil.parcial2.ui.navigation.Rutas
+import app.movil.parcial2.util.VentasSesion
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +50,9 @@ fun PaymentScreen(
     val items by cartDao.observeCart().collectAsState(initial = emptyList())
     val total = remember(items) {
         items.sumOf { it.unitPrice * it.quantity }
+    }
+    val totalItems = remember(items) {
+        items.sumOf { it.quantity }
     }
 
     var nombreTitular by remember { mutableStateOf("") }
@@ -157,9 +161,12 @@ fun PaymentScreen(
             Button(
                 onClick = {
                     scope.launch {
+                        VentasSesion.registrarVenta(total, totalItems)
 
                         cartDao.clear()
                         snackbar.showSnackbar("Pago simulado con éxito. ¡Gracias por tu compra!")
+                        
+                        // Navegar a la pantalla de inicio
                         nav.navigate(Rutas.HOME) {
                             popUpTo(Rutas.HOME) { inclusive = true }
                         }

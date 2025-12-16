@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import app.movil.parcial2.domain.model.Role
@@ -43,62 +44,84 @@ fun HomeScreen(nav: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Image(
-                painter = painterResource(id = R.drawable.icon_shop),
-                contentDescription = "Banner de XtremeShop",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(240.dp),
-                contentScale = ContentScale.Crop
-            )
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Bienvenido a XtremeShop",
-                style = MaterialTheme.typography.titleLarge
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            Button(
-                onClick = { nav.navigate(Rutas.CATALOG) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Catálogo")
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            Button(
-                onClick = { nav.navigate(Rutas.CART) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Carrito")
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            Button(
-                onClick = { nav.navigate(Rutas.ABOUT) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Quiénes somos")
-            }
-
+            
             if (user?.role == Role.ADMIN) {
+                // --- Admin View ---
+                Text(
+                    text = "Panel de Administrador",
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Bienvenido, ${user.username}.",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(Modifier.height(32.dp))
+
+                Button(
+                    onClick = { nav.navigate(Rutas.DASHBOARD) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ver Dashboard de Ventas")
+                }
+
                 Spacer(Modifier.height(12.dp))
+
                 Button(
                     onClick = { nav.navigate(Rutas.ADMIN) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Panel de administración")
+                    Text("Gestionar Productos")
+                }
+
+            } else {
+                // --- Regular User View ---
+                Image(
+                    painter = painterResource(id = R.drawable.icon_shop),
+                    contentDescription = "Banner de XtremeShop",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(240.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Bienvenido a XtremeShop",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                Button(
+                    onClick = { nav.navigate(Rutas.CATALOG) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ver Catálogo")
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                Button(
+                    onClick = { nav.navigate(Rutas.CART) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ir al Carrito")
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                Button(
+                    onClick = { nav.navigate(Rutas.ABOUT) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Conocer más")
                 }
             }
 
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.weight(1.0f)) // Pushes the logout button to the bottom
 
             OutlinedButton(
                 onClick = {
