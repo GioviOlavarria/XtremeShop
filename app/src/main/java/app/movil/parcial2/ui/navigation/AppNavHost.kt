@@ -36,7 +36,14 @@ fun AppNavHost(nav: NavHostController) {
         composable(Rutas.REGISTER) { PantallaRegistro(nav = nav) }
         composable(Rutas.RECOVER) { RecoverPasswordScreen(nav) }
 
-        composable(Rutas.HOME) { HomeScreen(nav) }
+        composable(Rutas.HOME) {
+            val u = app.movil.parcial2.util.sesion.currentUser
+            if (u != null && u.role == app.movil.parcial2.domain.model.Role.ADMIN) {
+                DashboardScreen(nav)
+            } else {
+                HomeScreen(nav)
+            }
+        }
         composable(Rutas.CATALOG) { CatalogScreen(nav) }
         composable(Rutas.CART) { CartScreen(nav) }
         composable(Rutas.CHECKOUT) { CheckoutScreen(nav) }

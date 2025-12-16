@@ -48,8 +48,16 @@ fun LoginScreen(
     if (loggedUser != null) {
         LaunchedEffect(loggedUser) {
             sesion.currentUser = loggedUser
-            nav.navigate(Rutas.HOME) {
+
+            val destino = if (loggedUser.role == app.movil.parcial2.domain.model.Role.ADMIN) {
+                Rutas.DASHBOARD
+            } else {
+                Rutas.HOME
+            }
+
+            nav.navigate(destino) {
                 popUpTo(Rutas.LOGIN) { inclusive = true }
+                launchSingleTop = true
             }
         }
     }

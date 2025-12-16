@@ -3,6 +3,7 @@ package app.movil.parcial2.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.BarChart
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,13 +89,6 @@ fun XtremeScaffold(
 
                 if (user?.role == Role.ADMIN) {
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.Filled.Home, null) },
-                        label = { Text("Home") },
-                        selected = false,
-                        onClick = { navigateAndClose(Rutas.HOME) },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                    )
-                    NavigationDrawerItem(
                         icon = { Icon(Icons.Filled.BarChart, null) },
                         label = { Text("Dashboard") },
                         selected = false,
@@ -126,6 +121,16 @@ fun XtremeScaffold(
                         label = { Text("Usuarios") },
                         selected = false,
                         onClick = { navigateAndClose(Rutas.ADMIN_USERS) },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
+                    NavigationDrawerItem(
+                        icon = { Icon(Icons.Filled.Logout, null) },
+                        label = { Text("Cerrar sesión") },
+                        selected = false,
+                        onClick = {
+                            sesion.currentUser = null
+                            navigateAndClose(Rutas.LOGIN)
+                        },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                     )
                 } else {
