@@ -27,4 +27,8 @@ interface CarritoDAO {
 
     @Query("DELETE FROM items_carrito")
     suspend fun clear()
+
+    @Query("DELETE FROM items_carrito")
+    suspend fun clearCart()
+
 }

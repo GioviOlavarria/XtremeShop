@@ -57,4 +57,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
             cartDao.deleteById(item.rowId)
         }
     }
+    suspend fun clearCart() {
+        cartDao.clearCart()
+    }
 }

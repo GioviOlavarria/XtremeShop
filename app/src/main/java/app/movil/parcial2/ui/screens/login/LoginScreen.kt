@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 package app.movil.parcial2.ui.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +32,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import app.movil.parcial2.domain.model.Role
-import app.movil.parcial2.domain.model.User
 import app.movil.parcial2.ui.navigation.Rutas
 import app.movil.parcial2.util.sesion
 
@@ -50,7 +48,6 @@ fun LoginScreen(
     if (loggedUser != null) {
         LaunchedEffect(loggedUser) {
             sesion.currentUser = loggedUser
-            // Navega siempre a HOME, XtremeScaffold decidirá qué mostrar
             nav.navigate(Rutas.HOME) {
                 popUpTo(Rutas.LOGIN) { inclusive = true }
             }
@@ -93,60 +90,28 @@ fun LoginScreen(
                     )
 
                     if (state.error != null) {
-                        Text(
-                            text = state.error ?: "",
-                            color = MaterialTheme.colorScheme.error
-                        )
+                        Text(state.error ?: "", color = MaterialTheme.colorScheme.error)
                     }
 
                     if (state.isLoading) {
                         CircularProgressIndicator(modifier = Modifier.size(32.dp))
                     } else {
                         Button(
-                            onClick = { 
-                                val username = user.trim()
-                                val password = pass.trim()
-
-                                if (username.equals("admin", ignoreCase = true)) {
-                                    sesion.currentUser = User(
-                                        id = -1,
-                                        username = "admin",
-                                        password = "1234",
-                                        role = Role.ADMIN
-                                    )
-                                    nav.navigate(Rutas.HOME) {
-                                        popUpTo(Rutas.LOGIN) { inclusive = true }
-                                    }
-                                } else if (username.equals("admin_user", ignoreCase = true) && password == "1234") {
-                                    sesion.currentUser = User(
-                                        id = -2,
-                                        username = "admin_user",
-                                        password = "1234",
-                                        role = Role.USER
-                                    )
-                                    nav.navigate(Rutas.HOME) {
-                                        popUpTo(Rutas.LOGIN) { inclusive = true }
-                                    }
-                                } else {
-                                    vm.login(user, pass)
-                                } 
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
+                            onClick = { vm.login(user.trim(), pass.trim()) },
+                            modifier = Modifier.fillMaxWidth(),
                             enabled = user.isNotBlank() && pass.isNotBlank()
-                        ) {
-                            Text("Entrar")
-                        }
+                        ) { Text("Entrar") }
                     }
 
                     TextButton(
-                        onClick = { nav.navigate(Rutas.REGISTER) },
-                        modifier = Modifier.padding(top = 8.dp),
+                        onClick = { nav.navigate(Rutas.RECOVER) },
                         enabled = !state.isLoading
-                    ) {
-                        Text("No tengo una cuenta. Registrarme")
-                    }
+                    ) { Text("¿Olvidaste tu contraseña?") }
+
+                    TextButton(
+                        onClick = { nav.navigate(Rutas.REGISTER) },
+                        enabled = !state.isLoading
+                    ) { Text("No tengo una cuenta. Registrarme") }
                 }
             }
         }

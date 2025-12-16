@@ -1,56 +1,67 @@
 package app.movil.parcial2.ui.screens.about
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import app.movil.parcial2.R
 import app.movil.parcial2.ui.navigation.XtremeScaffold
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun about(nav: NavHostController) {
-    XtremeScaffold(
-        nav = nav,
-        title = "Quiénes somos",
-        showBack = true
-    ) { paddingValues ->
+    XtremeScaffold(nav = nav, title = "Quiénes somos", showBack = true) { p ->
         Box(
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
+                .padding(p)
+                .fillMaxSize()
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(0.9f),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            Image(
+                painter = painterResource(id = R.drawable.about_bg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Surface(
+                color = Color.Black.copy(alpha = 0.55f),
+                modifier = Modifier.fillMaxSize()
+            ) {}
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(18.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Somos 2 compañeros de Duoc UC realizando un proyecto para Desarrollo de Aplicaciones móviles.",
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = "XtremeShop es el proyecto, el cual es una tienda ficticia de deportes extremos: skate, roller y BMX.",
-                        textAlign = TextAlign.Center
-                    )
-                }
+                Text(
+                    text = "XtremeShop",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = Color.White
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = "Somos una tienda de productos extremos. Nuestra misión es ofrecer calidad, buen precio y una experiencia rápida de compra.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = "• Skate • BMX • Roller • Accesorios",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
             }
         }
     }

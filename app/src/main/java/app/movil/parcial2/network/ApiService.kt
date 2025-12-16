@@ -35,4 +35,16 @@ interface ApiService {
 
     @GET("api/users")
     suspend fun getUsers(): List<User>
+
+    @GET("api/users/{id}")
+    suspend fun getUserById(@Path("id") id: Long): User
+
+    @PUT("api/users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Long,
+        @Body user: User
+    ): User
+
+    @DELETE("api/users/{id}")
+    suspend fun deleteUser(@Path("id") id: Long): Response<Unit>
 }
